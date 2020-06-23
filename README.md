@@ -26,7 +26,7 @@ Do not push to dev branch
   - it won't work until you switch **pk** with an integer
   - pk stand for primary key.
 
-* Register [Manager](https://api-shop-url.herokuapp.com/api/register-manager/)
+* Register [Manager](https://api-shop-url.herokuapp.com/register-manager/)
 * For [Manager](https://api-shop-url.herokuapp.com/api/manager)
 * For **each** [Manager](https://api-shop-url.herokuapp.com/api/manager/manager-id/<int:pk>)
   * it won't work until you switch **pk** with an integer
