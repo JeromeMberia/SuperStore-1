@@ -5,7 +5,7 @@ Do not push to dev branch
 
 ## API endpoints
 
-* For [Login](https://api-shop-url.herokuapp.com/token/login)
+* For [Login](https://api-shop-url.herokuapp.com/login/)
 * For [Shops](https://api-shop-url.herokuapp.com/api/shop/)
 
 * For [product-batch](https://api-shop-url.herokuapp.com/api/product-batch/)
@@ -13,20 +13,25 @@ Do not push to dev branch
   - it won't work until you switch **pk** with an integer
   - pk stand for primary key.
 
+* Register [Clerk](https://api-shop-url.herokuapp.com/register-clerk/)
 * For [Clerk](https://api-shop-url.herokuapp.com/api/clerk/)
 * For **each** [Clerk](https://api-shop-url.herokuapp.com/api/clerk/clerk-id/<int:pk>)
   - it won't work until you switch **pk** with an integer
   - pk stand for primary key.
+* Activate or Deactive **each** [Clerk](https://api-shop-url.herokuapp.com/api/clerk/clerk-id/activate/<int:pk>/)
 
+* Register [Merchant](https://api-shop-url.herokuapp.com/register-merchant/)
 * For [Merchant](https://api-shop-url.herokuapp.com/api/merchant)
 * For **each** [Merchant](https://api-shop-url.herokuapp.com/api/merchant/merchant-id/<int:pk>)
   - it won't work until you switch **pk** with an integer
   - pk stand for primary key.
 
-* For [manager](https://api-shop-url.herokuapp.com/api/manager)
-* For **each** [manager](https://api-shop-url.herokuapp.com/api/manager/manager-id/<int:pk>)
+* Register [Manager](https://api-shop-url.herokuapp.com/api/register-manager/)
+* For [Manager](https://api-shop-url.herokuapp.com/api/manager)
+* For **each** [Manager](https://api-shop-url.herokuapp.com/api/manager/manager-id/<int:pk>)
   * it won't work until you switch **pk** with an integer
   * pk stand for primary key.
+* Activate or Deactive **each** [Manager](https://api-shop-url.herokuapp.com/api/manager/manager-id/activate/<int:pk>/)
 
 ## Runing it on your local server
 
