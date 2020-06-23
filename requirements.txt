@@ -1,8 +1,8 @@
 asgiref==3.2.8
 confusable-homoglyphs==3.2.0
-django-cors-headers==3.4.0
 dj-database-url==0.5.0
 Django==3.0.7
+django-cors-headers==3.4.0
 django-heroku==0.3.1
 django-registration==3.1
 django-templated-mail==1.1.1
@@ -10,9 +10,16 @@ djangorestframework==3.11.0
 djangorestframework-jwt==1.11.0
 djoser==2.0.3
 gunicorn==20.0.4
+iohandler==1.0.6
+pathlib==1.0.1
 psycopg2==2.8.5
 PyJWT==1.7.1
 python-decouple==3.3
 pytz==2020.1
+renderer==1.0.3
+six==1.15.0
 sqlparse==0.3.1
+structlog==20.1.0
+typing==3.7.4.1
+utils==1.0.1
 whitenoise==5.1.0
