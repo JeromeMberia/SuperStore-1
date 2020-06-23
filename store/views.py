@@ -1,25 +1,25 @@
 from django.shortcuts import render
 from rest_framework import permissions
-from rest_framework.views import APIView
-from django.contrib.auth import get_user_model 
-from rest_framework.response import Response
 from rest_framework import status
-from django.http import HttpResponse, Http404,HttpResponseRedirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import AllowAny
-from django.core.exceptions import PermissionDenied
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.decorators import user_passes_test
-from .serializer import *
-from .renderers import UserJSONRenderer
-from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse, Http404,HttpResponseRedirect
+from django.views.generic import View
 from django.template.loader import render_to_string
+from django.conf import settings
+from django.core.exceptions import PermissionDenied
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model 
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
+from .serializer import *
+from .renderers import UserJSONRenderer
 from .utils import generate_token
-from django.core.mail import EmailMessage
-from django.conf import settings
-from django.views.generic import View
 
 class MerchantRegistration(APIView):
     permission_classes =  [ permissions.AllowAny ]
@@ -83,13 +83,6 @@ class MerchantList(APIView):
         serializers = MerchantSerializer(all_users, many=True)
         return Response(serializers.data)
 
-    def post(self, request, format=None):
-        serializers = MerchantSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class ManagerList(APIView):
     permission_classes = [
         permissions.AllowAny 
@@ -99,14 +92,6 @@ class ManagerList(APIView):
         all_users =  USER.objects.all()
         serializers = ManagerSerializer(all_users, many=True)
         return Response(serializers.data)
-
-    def post(self, request, format=None):
-        serializers = ManagerSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ClerkList(APIView):
     permission_classes = [
@@ -118,12 +103,6 @@ class ClerkList(APIView):
         serializers = ClerkSerializer(all_users, many=True)
         return Response(serializers.data)
 
-    def post(self, request, format=None):
-        serializers = ClerkSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SoloMerchant(APIView):
@@ -228,10 +207,9 @@ class SoloClerk(APIView):
 
 class ShopsList(APIView):
     serializer_class = ShopSerializer
-
     def get(self, request, format=None):
-        snippets = Shop.objects.all()
-        serializer = ShopSerializer(snippets, many=True)
+        shops = Shop.objects.all()
+        serializer = ShopSerializer(shops, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -246,8 +224,8 @@ class ProductBatchList(APIView):
     serializer_class = ProductBatchSerializer
 
     def get(self, request, format=None):
-        snippets = ProductBatch.objects.all()
-        serializer = ProductBatchSerializer(snippets, many=True)
+        products = ProductBatch.objects.all()
+        serializer = ProductBatchSerializer(products, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):

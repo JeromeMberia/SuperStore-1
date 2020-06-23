@@ -4,10 +4,10 @@ from store.views import *
 from django.conf.urls import include
 
 urlpatterns = [
-    path('register-merchant', views.MerchantRegistration.as_view()),
-    path('register-manager', views.ManagerRegistration.as_view()),
-    path('register-clerk', views.ClerkRegistration.as_view()),
-    path('login', views.UserLogin.as_view()),
+    path('register-merchant/', views.MerchantRegistration.as_view()),
+    path('register-manager/', views.ManagerRegistration.as_view()),
+    path('register-clerk/', views.ClerkRegistration.as_view()),
+    path('login/', views.UserLogin.as_view()),
     path('api/merchant/', views.MerchantList.as_view(), name='merchant'),
     path('api/merchant/merchant-id/<pk>/', views.SoloMerchant.as_view()),
     path('api/manager/', views.ManagerList.as_view(), name='manger'),
@@ -19,5 +19,4 @@ urlpatterns = [
     path('api/product-batch/', views.ProductBatchList.as_view()),
     path('api/product-batch/<int:pk>/', ProductBatchDetail.as_view(), name='shops'),
     path('api/shop/', ShopsList.as_view(), name='shops'),
-
 ]
