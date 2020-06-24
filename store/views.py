@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
@@ -79,7 +80,7 @@ class MerchantList(APIView):
     ]
     serializer_class = MerchantSerializer
     def get(self, request, format=None ):
-        all_users =  USER.objects.all()
+        all_users =  Merchant.objects.all()
         serializers = MerchantSerializer(all_users, many=True)
         return Response(serializers.data)
 
@@ -89,7 +90,7 @@ class ManagerList(APIView):
     ]
     serializer_class = ManagerSerializer
     def get(self, request, format=None):
-        all_users =  USER.objects.all()
+        all_users =  Manager.objects.all()
         serializers = ManagerSerializer(all_users, many=True)
         return Response(serializers.data)
 
@@ -99,7 +100,7 @@ class ClerkList(APIView):
     ]
     serializer_class = ClerkSerializer
     def get(self, request, format=None):
-        all_users =  USER.objects.all()
+        all_users =  Clerk.objects.all()
         serializers = ClerkSerializer(all_users, many=True)
         return Response(serializers.data)
 
@@ -113,8 +114,8 @@ class SoloMerchant(APIView):
     
     def get_Merch(self, pk):
         try:
-            return USER.objects.get(pk=pk)
-        except get_user_model().DoesNotExist:
+            return Merchant.objects.get(pk=pk)
+        except Merchant.DoesNotExist:
             return Http404
 
     
@@ -146,8 +147,8 @@ class SoloManager(APIView):
     serializer_class = ManagerSerializer
     def get_Manager(self, pk):
         try:
-            return USER.objects.get(pk=pk)
-        except USER.DoesNotExist:
+            return Manager.objects.get(pk=pk)
+        except Manager.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format=None):
@@ -179,8 +180,8 @@ class SoloClerk(APIView):
     serializer_class = ClerkSerializer
     def get_Clerk(self, pk):
         try:
-            return get_user_model().objects.get(pk=pk)
-        except get_user_model().DoesNotExist:
+            return Clerk.objects.get(pk=pk)
+        except Clerk.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format=None):
@@ -218,7 +219,7 @@ class ShopsList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-      
+
 class ProductBatchList(APIView):
 
     serializer_class = ProductBatchSerializer
@@ -228,23 +229,14 @@ class ProductBatchList(APIView):
         serializer = ProductBatchSerializer(products, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        product_batch_data = request.data
-
-        new_product_batch = ProductBatch.objects.create(
-            item=Item.objects.get(id=product_batch_data["item"]), 
-            buying_price=product_batch_data["buying_price"], 
-            damaged_items=product_batch_data["damaged_items"], 
-            supplier=Supplier.objects.get(id=product_batch_data["supplier"]),
-            clerk=Clerk.objects.get(id=product_batch_data["clerk"]),
-            payment_status=product_batch_data["payment_status"]
-            )
-
-        new_product_batch.save()
-
-        serializer = ProductBatchSerializer(new_product_batch)
-
-        return Response(serializer.data) 
+class MakeProductBatchList(APIView):
+    serializer_class = MakeProductBatchSerializer
+    def post(self, request, format=None):
+        serializer = MakeProductBatchSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 class ProductBatchDetail(APIView):
     serializer_class = ProductBatchSerializer

@@ -32,7 +32,9 @@ class MerchantSerializer(serializers.ModelSerializer):
             'id',
             'is_superuser',
             'is_staff',
-            )
+            "token",
+        )
+        
 
 
     def create(self, validated_data):
@@ -46,7 +48,6 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'shop_name',
-            'manager',
             )
         depth = 3
 
@@ -71,10 +72,12 @@ class ManagerSerializer(serializers.ModelSerializer):
             "shop",
             "token"
             ]
+        
         read_only_fields = (
             'id', 
             'is_superuser',
             'is_staff',
+            "token",
             )
 
 
@@ -106,8 +109,8 @@ class ClerkSerializer(serializers.ModelSerializer):
             'id',
             'is_superuser',
             'is_staff',
+            "token",
             )
-
 
     def create(self, validated_data):
         return Clerk.objects.create_clerk(**validated_data)
@@ -149,9 +152,71 @@ class UserLoginSearilizer(serializers.Serializer):
             'username': user.username,
             'token': user.token
         }
-  
 
 class ProductBatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductBatch
+        fields = (
+            'id',
+            'item',
+            'buying_price',
+            'quantity_bought',
+            'date_received',
+            'shop',
+            'damaged_items',
+            'supplier',
+            'clerk',
+            'payment_status',
+            )
+        depth = 3
+
+
+class ProductSalesSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ProductSales
+        fields = (
+            'id',
+            'item',
+            'quantity',
+            'selling_price',
+            'shop',
+            )
+
+class ProductSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'product_name',
+            'shop',
+            )
+
+class SupplierSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'supplier_name',
+            'supplier_contant',
+            )
+
+class ItemSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'item_name',
+            'quantity',
+            'damaged_items',
+            'shop',
+            )
+
+class MakeProductBatchSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProductBatch
         fields = (
@@ -164,9 +229,14 @@ class ProductBatchSerializer(serializers.ModelSerializer):
             'clerk',
             'payment_status',
             )
-        depth = 3
-        
+        read_only_fields = (
+            'id',
+            'date_received',
+            )
+
+
 class MerchantActivateSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Merchant
         fields = ['is_active',]

@@ -17,6 +17,8 @@ urlpatterns = [
     path('api/clerk/clerk-id/activate/<int:pk>/', views.SoloActivateClerk.as_view()),
     path('api/clerk/clerk-id/<int:pk>/', views.SoloClerk.as_view()),
     path('api/product-batch/', views.ProductBatchList.as_view()),
+    path('api/make-product-batch/', views.MakeProductBatchList.as_view()),
     path('api/product-batch/<int:pk>/', ProductBatchDetail.as_view(), name='shops'),
     path('api/shop/', ShopsList.as_view(), name='shops'),
+    
 ]

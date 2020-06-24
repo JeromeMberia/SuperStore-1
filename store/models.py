@@ -8,6 +8,12 @@ from datetime import datetime, timedelta
 
 
 
+class Shop(models.Model):
+    shop_name = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return self.shop_name
+        
 class CustomUserManager(BaseUserManager):
     
     def create_user(self, username, email, password):
@@ -55,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    shop = models.CharField(max_length=100,null=True,blank=True)
+    shop = models.ForeignKey(Shop, null=True, on_delete=models.SET_NULL)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [ 'username']
     objects = CustomUserManager()
@@ -133,7 +139,6 @@ class Manager(User, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELD = ['email', 'username']
 
-   
 
     objects = ManagerManager()
 
@@ -154,23 +159,13 @@ class Clerk(User, PermissionsMixin):
         return self.username
 
 
-
-
-class Shop(models.Model):
-    shop_name = models.CharField(max_length=50, null=True)
- 
-    def __str__(self):
-        return self.shop_name
-
-
-    
 class Product(models.Model):
     product_name = models.CharField(max_length=50, null=True)
-
-    manager = models.OneToOneField(Manager, on_delete=models.CASCADE)
+    
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.shop_name
+        return self.product_name
 
 class Supplier(models.Model):
     supplier_name = models.CharField(max_length=20, null=True)
@@ -181,7 +176,9 @@ class Supplier(models.Model):
 
 class Item(models.Model):
     item_name = models.CharField(max_length=20, null=True)
-
+    quantity = models.IntegerField(null=True)
+    damaged_items = models.IntegerField(null=True)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE) 
     def __str__(self):
         return self.item_name
 
@@ -191,9 +188,11 @@ class ProductBatch(models.Model):
 
     buying_price = models.IntegerField(null=True)
 
-    date_received = models.DateField(auto_now_add=True)
+    quantity_bought = models.IntegerField(blank=False)
 
-    damaged_items = models.IntegerField(null=True)
+    date_received = models.DateField(auto_now_add=True)
+    
+    shop = models.ForeignKey(Shop, null=True, on_delete=models.SET_NULL )
 
     supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL)
 
@@ -202,17 +201,17 @@ class ProductBatch(models.Model):
     payment_status = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.item.item_name
-
-
+        return self.item
 
 class ProductSales(models.Model):
-    product = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+
+    item = models.ForeignKey(Item, null=True, on_delete=models.SET_NULL)
+
     quantity = models.IntegerField(null=True)
+
     selling_price = models.DateField(auto_now_add=True)
+
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.product.item_name
-
-
+        return self.item.item_name
