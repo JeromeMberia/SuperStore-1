@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    shop = models.ForeignKey(Shop, null=True, on_delete=models.SET_NULL)
+    shop = models.CharField(max_length=100,null=True,blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [ 'username']
     objects = CustomUserManager()
