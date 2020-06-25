@@ -163,12 +163,14 @@ class ProductBatchSerializer(serializers.ModelSerializer):
             'quantity_bought',
             'date_received',
             'shop',
-            'damaged_items',
             'supplier',
             'clerk',
-            'payment_status',
+            'paid_for',
             )
-        depth = 3
+        read_only_fields = (
+            'id',
+            'date_received',
+            )
 
 
 class ProductSalesSerializer(serializers.ModelSerializer):
@@ -183,20 +185,10 @@ class ProductSalesSerializer(serializers.ModelSerializer):
             'shop',
             )
 
-class ProductSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Product
-        fields = (
-            'id',
-            'product_name',
-            'shop',
-            )
-
 class SupplierSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Product
+        model = Supplier
         fields = (
             'id',
             'supplier_name',
@@ -206,7 +198,7 @@ class SupplierSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Product
+        model = Item
         fields = (
             'id',
             'item_name',
@@ -214,26 +206,6 @@ class ItemSerializer(serializers.ModelSerializer):
             'damaged_items',
             'shop',
             )
-
-class MakeProductBatchSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProductBatch
-        fields = (
-            'id',
-            'item',
-            'buying_price',
-            'date_received',
-            'damaged_items',
-            'supplier',
-            'clerk',
-            'payment_status',
-            )
-        read_only_fields = (
-            'id',
-            'date_received',
-            )
-
 
 class MerchantActivateSerializer(serializers.ModelSerializer):
     

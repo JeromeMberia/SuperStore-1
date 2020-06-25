@@ -30,8 +30,6 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
-   
-
     def create_superuser(self, username, email, password):
     
         if password is None:
@@ -158,15 +156,6 @@ class Clerk(User, PermissionsMixin):
     def __str__(self):
         return self.username
 
-
-class Product(models.Model):
-    product_name = models.CharField(max_length=50, null=True)
-    
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.product_name
-
 class Supplier(models.Model):
     supplier_name = models.CharField(max_length=20, null=True)
     supplier_contant = models.CharField(max_length=20, null=True)
@@ -178,13 +167,13 @@ class Item(models.Model):
     item_name = models.CharField(max_length=20, null=True)
     quantity = models.IntegerField(null=True)
     damaged_items = models.IntegerField(null=True)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE) 
+    shop = models.CharField(max_length=20, null=True) 
     def __str__(self):
         return self.item_name
 
 class ProductBatch(models.Model):
 
-    item = models.ForeignKey(Item, null=True, on_delete=models.SET_NULL)
+    item = models.CharField(max_length=20, null=True)
 
     buying_price = models.IntegerField(null=True)
 
@@ -192,26 +181,26 @@ class ProductBatch(models.Model):
 
     date_received = models.DateField(auto_now_add=True)
     
-    shop = models.ForeignKey(Shop, null=True, on_delete=models.SET_NULL )
+    shop = models.CharField(max_length=20, null=True)
 
-    supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL)
+    supplier = models.CharField(max_length=20, null=True)
 
-    clerk = models.ForeignKey(Clerk, null=True, on_delete=models.SET_NULL)
+    clerk = models.CharField(max_length=20, null=True)
 
-    payment_status = models.BooleanField(default=False)
+    paid_for = models.BooleanField(default=False)
 
     def __str__(self):
         return self.item
 
 class ProductSales(models.Model):
 
-    item = models.ForeignKey(Item, null=True, on_delete=models.SET_NULL)
+    item = models.CharField(max_length=20, null=True)
 
     quantity = models.IntegerField(null=True)
 
     selling_price = models.DateField(auto_now_add=True)
 
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    shop = models.CharField(max_length=20, null=True)
 
     def __str__(self):
         return self.item.item_name

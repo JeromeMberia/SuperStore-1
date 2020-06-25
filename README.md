@@ -6,7 +6,10 @@ Do not push to dev branch
 ## API endpoints
 
 * For [Login](https://api-shop-url.herokuapp.com/login/)
+* For [Purchases](https://api-shop-url.herokuapp.com/api/purchases/)
 * For [Shops](https://api-shop-url.herokuapp.com/api/shop/)
+* For [Items](https://api-shop-url.herokuapp.com/api/items/)
+* For [Sales](https://api-shop-url.herokuapp.com/api/sales/)
 
 * For [product-batch](https://api-shop-url.herokuapp.com/api/product-batch/)
 * For **each** [product-batch](https://api-shop-url.herokuapp.com/api/merchant/api/product-batch/<int:pk>/)

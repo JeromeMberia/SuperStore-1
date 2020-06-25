@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -229,10 +229,8 @@ class ProductBatchList(APIView):
         serializer = ProductBatchSerializer(products, many=True)
         return Response(serializer.data)
 
-class MakeProductBatchList(APIView):
-    serializer_class = MakeProductBatchSerializer
     def post(self, request, format=None):
-        serializer = MakeProductBatchSerializer(data=request.data)
+        serializer = ProductBatchSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -314,3 +312,64 @@ class SoloActivateClerk(APIView):
             return Response(serializers.data)
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+class ItemList(APIView):
+    permission_classes = [permissions.AllowAny ]
+    serializer_class = ItemSerializer
+    def get(self, request, format=None):
+        all_items =  Item.objects.all()
+        serializers = ItemSerializer(all_items, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):
+        serializers = ItemSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PurchaseList(APIView):
+    permission_classes = [
+        permissions.AllowAny 
+    ]
+    serializer_class = ProductBatchSerializer
+    def get(self, request, format=None):
+        all_items =  ProductBatch.objects.all()
+        serializers = ProductBatchSerializer(all_items, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):
+        serializers = ProductBatchSerializer(data=request.data)
+        order = request.data
+        item = Item.objects.get(shop=order["shop"],item_name=order["item"])
+        item.quantity = item.quantity+int(order["quantity_bought"])
+        
+        item.save()
+        print(item.quantity)
+        print(order["quantity_bought"])
+
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SalesList(APIView):
+    permission_classes = [
+        permissions.AllowAny 
+    ]
+    serializer_class = ProductSalesSerializer
+    def get(self, request, format=None):
+        all_items =  ProductSales.objects.all()
+        serializers = ProductSalesSerializer(all_items, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):
+        serializers = ProductSalesSerializer(data=request.data)
+        sale = request.data
+        item = Item.objects.get(shop=sale["shop"],item_name=sale["item"])
+        item.quantity = item.quantity-int(sale["quantity"])
+        item.save()
+        print(item.quantity)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
