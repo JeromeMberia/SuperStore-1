@@ -2,7 +2,10 @@
 
 **Note**
 Do not push to dev branch
-
+## Admin
+  Email     - jake@gmail.com
+  password  - testing123
+  
 ## API endpoints
 
 * For [Login](https://api-shop-url.herokuapp.com/login/)
