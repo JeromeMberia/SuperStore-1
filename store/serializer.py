@@ -222,3 +222,20 @@ class ClerkActivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clerk
         fields = ['is_active',]
+
+class PaidForProductBatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductBatch
+        fields = (
+            'id',
+            'paid_for',
+            'supplier',
+            'item',
+            'buying_price',
+            )
+        read_only_fields = (
+            'id',
+            'supplier',
+            'item',
+            'buying_price',
+            )

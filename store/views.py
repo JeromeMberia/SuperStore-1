@@ -28,6 +28,9 @@ class MerchantRegistration(APIView):
     serializer_class = MerchantSerializer
 
     def post(self, request):
+        """
+            this function register the Merchant
+        """
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
@@ -40,14 +43,15 @@ class ManagerRegistration(APIView):
     serializer_class = ManagerSerializer
 
     def post(self, request):
+        """
+            this function register the Manager
+        """
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()  
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-         
-       
 
 class ClerkRegistration(APIView):
     permission_classes =  [ permissions.AllowAny]
@@ -55,6 +59,9 @@ class ClerkRegistration(APIView):
     serializer_class = ClerkSerializer
 
     def post(self, request):
+        """
+            this function register the Clerk
+        """
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
@@ -80,6 +87,9 @@ class MerchantList(APIView):
     ]
     serializer_class = MerchantSerializer
     def get(self, request, format=None ):
+        """
+            this function displays the Merchant
+        """
         all_users =  Merchant.objects.all()
         serializers = MerchantSerializer(all_users, many=True)
         return Response(serializers.data)
@@ -90,29 +100,36 @@ class ManagerList(APIView):
     ]
     serializer_class = ManagerSerializer
     def get(self, request, format=None):
+        """
+            this function displays the Managers
+        """
         all_users =  Manager.objects.all()
         serializers = ManagerSerializer(all_users, many=True)
         return Response(serializers.data)
 
 class ClerkList(APIView):
-    permission_classes = [
-        permissions.AllowAny 
-    ]
-    serializer_class = ClerkSerializer
+    permission_classes  = [ permissions.AllowAny ]
+    serializer_class    = ClerkSerializer
+
     def get(self, request, format=None):
+        """
+            this function displays the Clerks
+        """
         all_users =  Clerk.objects.all()
         serializers = ClerkSerializer(all_users, many=True)
         return Response(serializers.data)
 
-
-
 class SoloMerchant(APIView):
-    permission_classes = [
-        permissions.AllowAny 
-    ]
+    permission_classes = [ permissions.AllowAny ]
     serializer_class = MerchantSerializer
     
     def get_Merch(self, pk):
+        """
+            this function check if Merchant table 
+            has any that primary key(pk) 
+            in it's table else it going 
+            to raise a 404 error
+        """
         try:
             return Merchant.objects.get(pk=pk)
         except Merchant.DoesNotExist:
@@ -120,12 +137,18 @@ class SoloMerchant(APIView):
 
     
     def get(self, request, pk, format=None):
+        """
+            this function displays the Merchant
+        """
         Merch = self.get_Merch(pk)
         serializers = MerchantSerializer(Merch)
         return Response(serializers.data)
 
 
     def put(self, request, pk, format=None):
+        """
+            this function edit the Merchant
+        """
         Merch = self.get_Merch(pk)
         serializers = MerchantSerializer(Merch, request.data)
         if serializers.is_valid():
@@ -135,17 +158,24 @@ class SoloMerchant(APIView):
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, is_superuser, is_staff, pk, format=None):
-        if is_superuser==True and is_staff==True:
-            Merch = self.get_Merch(pk)
-            Merch.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        """
+            this function deletes the Merchant
+        """
+        Merch = self.get_Merch(pk)
+        Merch.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SoloManager(APIView):
-    permission_classes = [
-        permissions.AllowAny 
-    ]
+    permission_classes = [ permissions.AllowAny ]
     serializer_class = ManagerSerializer
+
     def get_Manager(self, pk):
+        """
+            this function check if Merchant table 
+            has any that primary key(pk) 
+            in it's table else it going 
+            to raise a 404 error
+        """
         try:
             return Manager.objects.get(pk=pk)
         except Manager.DoesNotExist:
@@ -289,10 +319,8 @@ class SoloActivateManager(APIView):
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SoloActivateClerk(APIView):
-    permission_classes = [
-        permissions.AllowAny 
-    ]
-    serializer_class = ClerkActivateSerializer
+    permission_classes  = [ permissions.AllowAny ]
+    serializer_class    = ClerkActivateSerializer
     def get_Clerk(self, pk):
         try:
             return Clerk.objects.get(pk=pk)
@@ -366,10 +394,38 @@ class SalesList(APIView):
         serializers = ProductSalesSerializer(data=request.data)
         sale = request.data
         item = Item.objects.get(shop=sale["shop"],item_name=sale["item"])
-        item.quantity = item.quantity-int(sale["quantity"])
-        item.save()
-        print(item.quantity)
+        required_quantity = int(sale["quantity"])
+        original_quantity = item.quantity
+        if required_quantity <= original_quantity:
+            item.quantity = item.quantity-int(sale["quantity"])
+            item.save()
+            if serializers.is_valid():
+                serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+            print(item.quantity)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PaymentStatus(APIView):
+    permission_classes = [ permissions.AllowAny ]
+    serializer_class = PaidForProductBatchSerializer
+    def get_paid_for(self, pk):
+        try:
+            return ProductBatch.objects.get(pk=pk)
+        except get_user_model().DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format=None):
+        Paid_for=None
+        Paid_for = self.get_paid_for(pk)
+        serializers = PaidForProductBatchSerializer(Paid_for)
+        return Response(serializers.data)
+
+    def put(self, request, pk, format=None):
+        Paid_for=None
+        Paid_for = self.get_paid_for(pk)
+        serializers = PaidForProductBatchSerializer(Paid_for, request.data)
         if serializers.is_valid():
             serializers.save()
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)

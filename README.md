@@ -2,6 +2,7 @@
 
 **Note**
 Do not push to dev branch
+Delete print
 ## Admin
   Email     - jake@gmail.com
   password  - testing123

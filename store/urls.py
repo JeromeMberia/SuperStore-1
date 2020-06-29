@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/items/', views.ItemList.as_view()),
     path('api/purchases/', views.PurchaseList.as_view()),
     path('api/sales/', views.SalesList.as_view()),
+    path('api/product-batch/paid/<int:pk>/', views.PaymentStatus.as_view(), )
 ]
