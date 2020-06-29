@@ -19,6 +19,7 @@ Delete print
 * For **each** [product-batch](https://api-shop-url.herokuapp.com/api/merchant/api/product-batch/<int:pk>/)
   - it won't work until you switch **pk** with an integer
   - pk stand for primary key.
+* Paid or not paid **each** [product-batch](https://api-shop-url.herokuapp.com/api/product-batch/paid/<int:pk>/)
 
 * Register [Clerk](https://api-shop-url.herokuapp.com/register-clerk/)
 * For [Clerk](https://api-shop-url.herokuapp.com/api/clerk/)

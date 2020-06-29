@@ -198,7 +198,7 @@ class ProductSales(models.Model):
 
     quantity = models.IntegerField(null=True)
 
-    selling_price = models.DateField(auto_now_add=True)
+    selling_price = models.IntegerField(null=True)
 
     shop = models.CharField(max_length=20, null=True)
 
