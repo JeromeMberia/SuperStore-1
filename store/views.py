@@ -402,7 +402,7 @@ class PurchaseList(APIView):
         serializers = ProductBatchSerializer(data=request.data)
         order = request.data
         item = Item.objects.get(shop=order["shop"],item_name=order["item"])
-        item.quantity = item.quantity+int(order["quantity_bought"])
+        item.quantity = int(item.quantity)+int(order["quantity_bought"])
         item.save()
         print(item.quantity)
         print(order["quantity_bought"])
