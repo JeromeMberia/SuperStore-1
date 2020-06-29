@@ -207,6 +207,21 @@ class ItemSerializer(serializers.ModelSerializer):
             'shop',
             )
 
+class ItemDamagedSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Item
+        fields = (
+            'id',
+            'item_name',
+            'damaged_items',
+            'shop',
+            )
+        read_only_fields = (
+            'id',
+            'item_name',
+            'shop',
+            )
 class MerchantActivateSerializer(serializers.ModelSerializer):
     
     class Meta:

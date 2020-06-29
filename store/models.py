@@ -174,21 +174,14 @@ class Item(models.Model):
 class ProductBatch(models.Model):
 
     item = models.CharField(max_length=20, null=True)
-
     buying_price = models.IntegerField(null=True)
-
     quantity_bought = models.IntegerField(blank=False)
-
     date_received = models.DateField(auto_now_add=True)
-    
     shop = models.CharField(max_length=20, null=True)
-
     supplier = models.CharField(max_length=20, null=True)
-
     clerk = models.CharField(max_length=20, null=True)
-
     paid_for = models.BooleanField(default=False)
-
+    
     def __str__(self):
         return self.item
 
