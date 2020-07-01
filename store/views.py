@@ -237,7 +237,9 @@ class SoloClerk(APIView):
 
 
 class ShopsList(APIView):
+
     serializer_class = ShopSerializer
+    
     def get(self, request, format=None):
         shops = Shop.objects.all()
         serializer = ShopSerializer(shops, many=True)
@@ -389,10 +391,10 @@ class SoloItemList(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class PurchaseList(APIView):
-    permission_classes = [
-        permissions.AllowAny 
-    ]
+
+    permission_classes = [ permissions.AllowAny ]
     serializer_class = ProductBatchSerializer
+
     def get(self, request, format=None):
         all_items =  ProductBatch.objects.all()
         serializers = ProductBatchSerializer(all_items, many=True)
@@ -429,7 +431,7 @@ class SalesList(APIView):
         required_quantity = int(sale["quantity"])
         original_quantity = item.quantity
         if required_quantity <= original_quantity:
-            item.quantity = item.quantity-int(sale["quantity"])
+            item.quantity = int(item.quantity)-int(sale["quantity"])
             item.save()
             if serializers.is_valid():
                 serializers.save()
